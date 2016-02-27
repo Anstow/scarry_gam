@@ -11,10 +11,10 @@ namespace graphs {
 /*!
  * \brief The maximum number of edges that each vertex may have.
  */
-constexpr size_t max_edges_per_vertex = 4;
+constexpr unsigned max_edges_per_vertex = 4;
 
 struct Vertex {
-    size_t id;
+    unsigned id;
 
     VertexGen gen_info{};
 };
@@ -22,11 +22,11 @@ struct Vertex {
 bool operator==(Vertex const& lhs, Vertex const& rhs);
 
 struct Edge {
-    size_t id;
+    unsigned id;
 
     // The vertices the edge attaches
-    size_t v1;
-    size_t v2;
+    unsigned v1;
+    unsigned v2;
 };
 
 class MapGraph {
@@ -53,8 +53,8 @@ private:
 public:
     MapGraph();
 
-    VertexItr vertexFromId(size_t vertex_id);
-    EdgeItr edgeFromId(size_t edge_id);
+    VertexItr vertexFromId(unsigned vertex_id);
+    EdgeItr edgeFromId(unsigned edge_id);
 
     VertexItr vertexBegin();
     VertexItr vertexEnd();
