@@ -30,6 +30,8 @@ struct VertexGen {
 };
 
 struct GraphGen {
+    // For generation only: MINE KEEP OFF
+    // TODO: Friend it!
     std::minstd_rand random_gen{0};
 
     size_t next_ver_id = 0;
