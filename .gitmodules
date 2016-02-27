@@ -1,0 +1,3 @@
+[submodule "tank"]
+	path = tank
+	url = gh:tank-dev/tank
