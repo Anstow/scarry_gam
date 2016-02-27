@@ -14,5 +14,9 @@ if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-mismatched-tags")
 endif()
 
+add_subdirectory(graphs)
+
 add_subdirectory(src)
 file(COPY "res" DESTINATION ${CMAKE_BINARY_DIR})
+
+#add_subdirectory(sfml_graph_viewer)
