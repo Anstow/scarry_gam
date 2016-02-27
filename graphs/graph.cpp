@@ -23,8 +23,8 @@ MapGraph::EdgeItr MapGraph::addEdge(VertexItr v1, VertexItr v2) {
     gen_info_.next_id++;
     // Tell the display that new edges have been connected
     EdgeItr e = edges_.end() - 1;
-    connect_edge(v1, e);
-    connect_edge(v2, e);
+    connect_edge(v1->id, e->id);
+    connect_edge(v2->id, e->id);
 
     return e;
 }
@@ -34,7 +34,7 @@ MapGraph::VertexItr MapGraph::randomNewVertex(VertexItr const& v) {
     double prob_old_vertex = vertices_.size() / expected_no_vertices;
     if (std::generate_canonical<double, 10>(gen_info_.random_gen) < prob_old_vertex) {
         // Grab one of the old vertices
-        auto v2 = std::begin(vertices_) + std::uniform_int_distribution<size_t>{1, vertices_.size()}(gen_info_.random_gen);
+        auto v2 = std::begin(vertices_) + std::uniform_int_distribution<size_t>{0, vertices_.size() - 1}(gen_info_.random_gen);
         // Stop edges connecting twice to the same vertex
         if (v == v2) {
             return addVertex();
@@ -50,7 +50,7 @@ MapGraph::VertexItr MapGraph::randomNewVertex(VertexItr const& v) {
 MapGraph::MapGraph() {
     // This assume there is more than one element in vertices
     addVertex();
-    process(std::begin(vertices_));
+    process(std::begin(vertices_)->id);
 }
 
 MapGraph::VertexItr MapGraph::vertexFromId(unsigned vertex_id) {
@@ -83,7 +83,12 @@ MapGraph::EdgeItr MapGraph::edgeFromId(unsigned edge_id) {
             });
 }
 
-MapGraph& MapGraph::process(MapGraph::VertexItr const& v) {
+MapGraph& MapGraph::process(unsigned id) {
+    // This isn't a vertex
+    auto v = vertexFromId(id);
+    if (v == vertices_.end()) 
+        return *this;
+    size_t vertexOffset = v - vertices_.begin();
     if (v->gen_info.processed) {
         // TODO: Reprocess the vertex here so the connections map change
     } else {
@@ -93,13 +98,15 @@ MapGraph& MapGraph::process(MapGraph::VertexItr const& v) {
                 max_edges_per_vertex - v->gen_info.no_edges, prob_edge_exists);
         unsigned edges_to_add = bdist(gen_info_.random_gen);
         for (unsigned i = 0; i < edges_to_add; ++i) {
+            // Note this invalidate the vertex v
             auto v2 = randomNewVertex(v);
+            v = vertices_.begin() + vertexOffset;
             addEdge(v, v2);
         }
     }
     return *this;
 }
 
-MapGraph& MapGraph::connect_edge(VertexItr, EdgeItr) {
+MapGraph& MapGraph::connect_edge(unsigned, unsigned) {
     return *this;
 }

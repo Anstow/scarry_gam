@@ -73,7 +73,7 @@ public:
     void clickRelease(sf::Vector2f const& pos) {
         auto selected = selectAt(pos);
         if (selected != nodes_.end()) {
-            g_.process(g_.vertexFromId(selected->vert.id));
+            g_.process(selected->vert.id);
         }
     }
     

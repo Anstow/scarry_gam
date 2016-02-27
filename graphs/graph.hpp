@@ -62,8 +62,8 @@ public:
     EdgeItr edgeBegin();
     EdgeItr edgeEnd();
 
-    MapGraph& process(VertexItr const& v);
-    MapGraph& connect_edge(VertexItr, EdgeItr);
+    MapGraph& process(unsigned id);
+    MapGraph& connect_edge(unsigned vertex_id, unsigned edge_id);
 };
 
 }
