@@ -11,16 +11,16 @@ bool operator==(Vertex const& lhs, Vertex const& rhs) {
 }
 
 MapGraph::VertexItr MapGraph::addVertex() {
-    vertices_.push_back(Vertex{gen_info_.next_ver_id});
-    gen_info_.next_ver_id++;
+    vertices_.push_back(Vertex{gen_info_.next_id});
+    gen_info_.next_id++;
     return vertices_.end() - 1;
 }
 
 MapGraph::EdgeItr MapGraph::addEdge(VertexItr v1, VertexItr v2) {
-    edges_.push_back(Edge{gen_info_.next_edge_id, v1->id, v2->id});
+    edges_.push_back(Edge{gen_info_.next_id, v1->id, v2->id});
     v1->gen_info.no_edges++;
     v2->gen_info.no_edges++;
-    gen_info_.next_edge_id++;
+    gen_info_.next_id++;
     // Tell the display that new edges have been connected
     EdgeItr e = edges_.end() - 1;
     connect_edge(v1, e);
