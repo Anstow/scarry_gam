@@ -3,6 +3,8 @@
 
 #include "Node.hpp"
 
+#include <iostream>
+
 constexpr std::chrono::milliseconds mouseDelay{200};
 
 int main() {
@@ -10,7 +12,10 @@ int main() {
 
     using namespace drawing;
 
+
+    std::cout << "Before creating graph." << std::endl;
     Graph g(window.getView().getCenter());
+    std::cout << "After creating graph." << std::endl;
 
     std::chrono::steady_clock::time_point mouseDownTime;
     bool buttonPressed = false;
@@ -19,8 +24,7 @@ int main() {
     while(window.isOpen()) {
         // Process events
         sf::Event event;
-        while (window.pollEvent(event))
-        {
+        while (window.pollEvent(event)) {
             if (event.type == sf::Event::Closed)
                 window.close();
         }
