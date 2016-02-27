@@ -56,6 +56,12 @@ public:
     VertexItr vertexFromId(size_t vertex_id);
     EdgeItr edgeFromId(size_t edge_id);
 
+    VertexItr vertexBegin();
+    VertexItr vertexEnd();
+
+    EdgeItr edgeBegin();
+    EdgeItr edgeEnd();
+
     MapGraph& process(VertexItr const& v);
     MapGraph& connect_edge(VertexItr, EdgeItr);
 };

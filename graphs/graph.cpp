@@ -60,6 +60,22 @@ MapGraph::VertexItr MapGraph::vertexFromId(size_t vertex_id) {
             });
 }
 
+MapGraph::VertexItr MapGraph::vertexBegin() {
+    return vertices_.begin();
+}
+
+MapGraph::VertexItr MapGraph::vertexEnd() {
+    return vertices_.end();
+}
+
+MapGraph::EdgeItr MapGraph::edgeBegin() {
+    return edges_.begin();
+}
+
+MapGraph::EdgeItr MapGraph::edgeEnd() {
+    return edges_.end();
+}
+
 MapGraph::EdgeItr MapGraph::edgeFromId(size_t edge_id) {
     return std::find_if(std::begin(edges_), std::end(edges_), 
             [edge_id] (Edge const& e) {
