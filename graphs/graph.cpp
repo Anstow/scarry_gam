@@ -53,7 +53,7 @@ MapGraph::MapGraph() {
     process(std::begin(vertices_));
 }
 
-MapGraph::VertexItr MapGraph::vertexFromId(size_t vertex_id) {
+MapGraph::VertexItr MapGraph::vertexFromId(unsigned vertex_id) {
     return std::find_if(std::begin(vertices_), std::end(vertices_), 
             [vertex_id] (Vertex const& v) {
                 return v.id == vertex_id; 
@@ -76,7 +76,7 @@ MapGraph::EdgeItr MapGraph::edgeEnd() {
     return edges_.end();
 }
 
-MapGraph::EdgeItr MapGraph::edgeFromId(size_t edge_id) {
+MapGraph::EdgeItr MapGraph::edgeFromId(unsigned edge_id) {
     return std::find_if(std::begin(edges_), std::end(edges_), 
             [edge_id] (Edge const& e) {
                 return e.id == edge_id; 
@@ -89,10 +89,10 @@ MapGraph& MapGraph::process(MapGraph::VertexItr const& v) {
     } else {
         double prob_edge_exists =
             average_no_edges_per_vertex / max_edges_per_vertex;
-        auto bdist = std::binomial_distribution<size_t>(
+        auto bdist = std::binomial_distribution<unsigned>(
                 max_edges_per_vertex - v->gen_info.no_edges, prob_edge_exists);
-        size_t edges_to_add = bdist(gen_info_.random_gen);
-        for (size_t i = 0; i < edges_to_add; ++i) {
+        unsigned edges_to_add = bdist(gen_info_.random_gen);
+        for (unsigned i = 0; i < edges_to_add; ++i) {
             auto v2 = randomNewVertex(v);
             addEdge(v, v2);
         }

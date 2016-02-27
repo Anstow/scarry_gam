@@ -34,8 +34,8 @@ struct GraphGen {
     // TODO: Friend it!
     std::minstd_rand random_gen{0};
 
-    size_t next_ver_id = 0;
-    size_t next_edge_id = 0;
+    unsigned next_ver_id = 0;
+    unsigned next_edge_id = 0;
 };
 
 }
