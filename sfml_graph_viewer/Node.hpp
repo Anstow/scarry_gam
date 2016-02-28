@@ -11,11 +11,15 @@
 
 namespace drawing {
 
+constexpr float springLength = 50.0f;
+
 class Node {
     sf::CircleShape graphic_;
 
 public:
     unsigned id;
+
+    sf::Vector2f force;
 
     Node(unsigned i, sf::Vector2f const& pos)
         : id(i) {
@@ -108,6 +112,13 @@ public:
                 });
     }
 
+    NodeItr getNodeFromId(unsigned id) {
+        return std::find_if(nodes_.begin(), nodes_.end(),
+                [=](Node const& n) {
+                    return n.id == id;
+                }); 
+    }
+
     void loadFromGraph() {
         std::for_each(g_.vertexBegin(), g_.vertexEnd(),
                 [this](graphs::Vertex& v) {
@@ -126,16 +137,10 @@ public:
                 [this](graphs::Edge const& e) {
                     // Find the position in the node graph of the first vertex
                     // associated to the edge
-                    auto node1 = std::find_if(nodes_.begin(), nodes_.end(),
-                            [&](Node const& n) {
-                                return n.id == e.v1;
-                            }) - nodes_.begin(); 
+                    auto node1 = getNodeFromId(e.v1) - nodes_.begin(); 
                     // Find the position in the node graph of the second vertex
                     // associated to the edge
-                    auto node2 = std::find_if(nodes_.begin(), nodes_.end(),
-                            [&](Node const& n) {
-                                return n.id == e.v2;
-                            }) - nodes_.begin();
+                    auto node2 = getNodeFromId(e.v2) - nodes_.begin(); 
                     edges_.push_back(std::make_tuple(node1, node2, e.id));
                 });
         selected_ = nodes_.end();
