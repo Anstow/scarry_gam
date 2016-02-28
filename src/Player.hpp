@@ -15,8 +15,8 @@ class Player : public Entity
     tank::Vectorf vel_{0,0};
 
     static constexpr double minSpeed_ = 0.001;
-    static constexpr double accel_ = 3.0;
-    static constexpr double damping_ = 0.9;
+    static constexpr double accel_ = 8.0;
+    static constexpr double damping_ = 0.75;
     static constexpr double time_ = 0.25;
 
 public:
