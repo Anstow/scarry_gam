@@ -3,9 +3,7 @@
 
 #include "Node.hpp"
 
-#include <iostream>
-
-constexpr std::chrono::milliseconds mouseDelay{200};
+constexpr std::chrono::milliseconds mouseDelay{100};
 
 int main() {
     sf::RenderWindow window(sf::VideoMode(800, 600), "Graph Viewer");
@@ -13,9 +11,7 @@ int main() {
     using namespace drawing;
 
 
-    std::cout << "Before creating graph." << std::endl;
     Graph g(window.getView().getCenter());
-    std::cout << "After creating graph." << std::endl;
 
     std::chrono::steady_clock::time_point mouseDownTime;
     bool buttonPressed = false;
@@ -34,7 +30,7 @@ int main() {
                 buttonPressed = true;
                 mouseDownTime = std::chrono::steady_clock::now();
             }
-            if (mouseDownTime - std::chrono::steady_clock::now() > mouseDelay) {
+            if (std::chrono::steady_clock::now() - mouseDownTime > mouseDelay) {
                 if (not selecting) {
                     selecting = true;
                     g.clickHold(static_cast<sf::Vector2f>(sf::Mouse::getPosition(window)));

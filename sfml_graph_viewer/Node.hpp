@@ -15,10 +15,10 @@ class Node {
     sf::CircleShape graphic_;
 
 public:
-    graphs::Vertex& vert;
+    unsigned id;
 
-    Node(graphs::Vertex& v, sf::Vector2f const& pos)
-        : vert(v) {
+    Node(unsigned i, sf::Vector2f const& pos)
+        : id(i) {
         graphic_.setPosition(pos);
         graphic_.setRadius(10.0f);
         graphic_.setFillColor({0,0,0,0});
@@ -73,7 +73,8 @@ public:
     void clickRelease(sf::Vector2f const& pos) {
         auto selected = selectAt(pos);
         if (selected != nodes_.end()) {
-            g_.process(selected->vert.id);
+            g_.process(selected->id);
+            loadFromGraph();
         }
     }
     
@@ -108,9 +109,9 @@ public:
                 [this](graphs::Vertex& v) {
                     if (std::find_if(nodes_.begin(), nodes_.end(),
                             [&](Node const& n) {
-                                return n.vert.id == v.id;
+                                return n.id == v.id;
                             }) == nodes_.end()) {
-                        nodes_.push_back(Node{v, createPos_});
+                        nodes_.push_back(Node{v.id, createPos_});
                     }
                 });
         edges_.clear();
@@ -120,13 +121,13 @@ public:
                     // associated to the edge
                     auto node1 = std::find_if(nodes_.begin(), nodes_.end(),
                             [&](Node const& n) {
-                                return n.vert.id == e.v1;
+                                return n.id == e.v1;
                             }) - nodes_.begin(); 
                     // Find the position in the node graph of the second vertex
                     // associated to the edge
                     auto node2 = std::find_if(nodes_.begin(), nodes_.end(),
                             [&](Node const& n) {
-                                return n.vert.id == e.v2;
+                                return n.id == e.v2;
                             }) - nodes_.begin();
                     edges_.push_back(std::make_tuple(node1, node2, e.id));
                 });
