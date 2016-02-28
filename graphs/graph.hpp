@@ -32,7 +32,9 @@ struct Edge {
 class MapGraph {
 public:
     using VertexItr = std::vector<Vertex>::iterator;
+    using CVertexItr = std::vector<Vertex>::const_iterator;
     using EdgeItr = std::vector<Edge>::iterator;
+    using CEdgeItr = std::vector<Edge>::const_iterator;
 
 private:
     std::vector<Vertex> vertices_;
@@ -54,13 +56,19 @@ public:
     MapGraph();
 
     VertexItr vertexFromId(unsigned vertex_id);
+    CVertexItr vertexFromId(unsigned vertex_id) const;
     EdgeItr edgeFromId(unsigned edge_id);
+    CEdgeItr edgeFromId(unsigned edge_id) const;
 
     VertexItr vertexBegin();
+    CVertexItr cVertexBegin() const;
     VertexItr vertexEnd();
+    CVertexItr cVertexEnd() const;
 
     EdgeItr edgeBegin();
+    CEdgeItr cEdgeBegin() const;
     EdgeItr edgeEnd();
+    CEdgeItr cEdgeEnd() const;
 
     MapGraph& process(unsigned id);
     MapGraph& connect_edge(unsigned vertex_id, unsigned edge_id);

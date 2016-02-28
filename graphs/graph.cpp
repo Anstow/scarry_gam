@@ -60,12 +60,27 @@ MapGraph::VertexItr MapGraph::vertexFromId(unsigned vertex_id) {
             });
 }
 
+MapGraph::CVertexItr MapGraph::vertexFromId(unsigned vertex_id) const {
+    return std::find_if(vertices_.cbegin(), vertices_.cend(), 
+            [vertex_id] (Vertex const& v) {
+                return v.id == vertex_id;
+            });
+}
+
 MapGraph::VertexItr MapGraph::vertexBegin() {
     return vertices_.begin();
 }
 
 MapGraph::VertexItr MapGraph::vertexEnd() {
     return vertices_.end();
+}
+
+MapGraph::CVertexItr MapGraph::cVertexBegin() const {
+    return vertices_.cbegin();
+}
+
+MapGraph::CVertexItr MapGraph::cVertexEnd() const {
+    return vertices_.cend();
 }
 
 MapGraph::EdgeItr MapGraph::edgeBegin() {
@@ -76,8 +91,25 @@ MapGraph::EdgeItr MapGraph::edgeEnd() {
     return edges_.end();
 }
 
+MapGraph::CEdgeItr MapGraph::cEdgeBegin() const
+{
+    return edges_.cbegin();
+}
+
+MapGraph::CEdgeItr MapGraph::cEdgeEnd() const
+{
+    return edges_.cend();
+}
+
 MapGraph::EdgeItr MapGraph::edgeFromId(unsigned edge_id) {
     return std::find_if(std::begin(edges_), std::end(edges_), 
+            [edge_id] (Edge const& e) {
+                return e.id == edge_id; 
+            });
+}
+
+MapGraph::CEdgeItr MapGraph::edgeFromId(unsigned edge_id) const {
+    return std::find_if(std::cbegin(edges_), std::cend(edges_), 
             [edge_id] (Edge const& e) {
                 return e.id == edge_id; 
             });
