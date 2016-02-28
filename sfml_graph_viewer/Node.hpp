@@ -6,15 +6,28 @@
 
 #include <vector>
 #include <algorithm>
+#include <random>
 
 #include "../graphs/graph.hpp"
 
 namespace drawing {
 
-constexpr float springLength = 50.0f;
+constexpr float springLength = 100.0f;
+constexpr float defaultSpringDef = 400.0f;
+
+constexpr float springConstEdge = 500.0f;
+constexpr float gravity = 0.05f;
+constexpr float nodeMass = 1.0f;
+constexpr float damping = 0.85;
+constexpr float stepTime = 0.01f;
+
+constexpr float vectorLength(sf::Vector2f const& v) {
+    return v.x * v.x + v.y * v.y;
+}
 
 class Node {
     sf::CircleShape graphic_;
+    sf::Vector2f vel = {0,0};
 
 public:
     unsigned id;
@@ -45,6 +58,13 @@ public:
     void draw(sf::RenderWindow& win) const {
         win.draw(graphic_);
     }
+
+    void stepSim(float time) {
+        vel *= damping;
+        vel += time * force / nodeMass;
+
+        setPos(getPos() + vel * time);
+    }
 };
 
 
@@ -63,6 +83,12 @@ class Graph {
     sf::Vector2f offset_ = {0,0};
 
     sf::Vector2f createPos_;
+
+    std::minstd_rand gen_{100};
+
+    float getRandom() {
+        return std::generate_canonical<float, 10>(gen_) * 2 - 1;
+    }
 
 public:
     Graph(sf::Vector2f const& createPos)
@@ -145,8 +171,73 @@ public:
                 });
         selected_ = nodes_.end();
     }
-};
 
+    float calcSpringForceMag(float len, float springConst) {
+        // Expects len > 0
+        return springConst * (len - springLength);
+    }
+
+    float calcGenForce(float lenSq) {
+        return gravity / lenSq - defaultSpringDef * (1);
+    }
+
+    /*!
+     * \brief Calculates the force of vertex 1 on vertex 2
+     */
+    sf::Vector2f calcEdgeForce(Node& v1, Node const& v2) {
+        // We don't want the length of the edge to be 0 so move the vertex a little
+        while (vectorLength(v2.getPos() - v1.getPos()) < 0.001f)
+            v1.setPos(v1.getPos() + sf::Vector2f{getRandom(),getRandom()});
+        sf::Vector2f offset = v2.getPos() - v1.getPos();
+        float l = vectorLength(offset);
+        return calcSpringForceMag(std::sqrt(l), springConstEdge) * offset / std::sqrt(l);
+    }
+
+    /*!
+     * \brief Calculates the force of gravity vertex 1 on vertex 2
+     */
+    sf::Vector2f calcSingleNodeForce(Node& v1, Node const& v2) {
+        // Don't act on yourself
+        if (v1.id == v2.id)
+            return {0,0};
+        // We don't want the length of the edge to be 0 so move the vertex a little
+        while (vectorLength(v2.getPos() - v1.getPos()) < 0.001f)
+            v1.setPos(v1.getPos() + sf::Vector2f{getRandom(),getRandom()});
+        sf::Vector2f offset = v2.getPos() - v1.getPos();
+        float l = vectorLength(offset);
+        return calcGenForce(l) * offset / std::sqrt(l);
+    }
+
+    sf::Vector2f calcNodeForces(Node& v) {
+        sf::Vector2f force = sf::Vector2f{0,0};
+        std::for_each(nodes_.begin(), nodes_.end(),
+                [this, &v, &force](Node& v2) {
+                    force += calcSingleNodeForce(v, v2);
+                });
+        return force;
+    }
+
+    void stepPhysics(float time = stepTime) {
+        // Calculates the gravity forces on each node
+        std::for_each(nodes_.begin(), nodes_.end(),
+                [=](Node& v) {
+                    v.force = calcNodeForces(v);
+                });
+        // Calulates the spring forces on each node
+        std::for_each(edges_.begin(), edges_.end(),
+                [=](Edge const& e) {
+                    auto forceVec = calcEdgeForce(nodes_[std::get<0>(e)], nodes_[std::get<1>(e)]);
+
+                    nodes_[std::get<0>(e)].force += forceVec;
+                    nodes_[std::get<1>(e)].force -= forceVec;
+                });
+        // Step the simulation
+        std::for_each(nodes_.begin(), nodes_.end(),
+                [=](Node& n) {
+                    n.stepSim(time);
+                });
+    }
+};
 
 }
 

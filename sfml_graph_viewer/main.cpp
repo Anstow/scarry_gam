@@ -14,8 +14,11 @@ int main() {
     Graph g(window.getView().getCenter());
 
     std::chrono::steady_clock::time_point mouseDownTime;
-    bool buttonPressed = false;
+    bool leftButtonPressed = false;
     bool selecting = false;
+
+    bool rightButtonPressed = false;
+    bool simulating = true;
 
     while(window.isOpen()) {
         // Process events
@@ -26,8 +29,8 @@ int main() {
         }
         // Handle mouse input
         if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left)) {
-            if (not buttonPressed) {
-                buttonPressed = true;
+            if (not leftButtonPressed) {
+                leftButtonPressed = true;
                 mouseDownTime = std::chrono::steady_clock::now();
             }
             if (std::chrono::steady_clock::now() - mouseDownTime > mouseDelay) {
@@ -39,12 +42,26 @@ int main() {
                 }
             } 
         } else {
-            if (buttonPressed and not selecting) {
+            if (leftButtonPressed and not selecting) {
                 g.clickRelease(static_cast<sf::Vector2f>(sf::Mouse::getPosition(window)));
             }
-            buttonPressed = false;
+            leftButtonPressed = false;
             selecting = false;
+
+            if (simulating) 
+                g.stepPhysics();
         }
+
+        if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Right)) {
+            rightButtonPressed = true;
+        } else {
+            if (rightButtonPressed) {
+                simulating = not simulating;
+            }
+            rightButtonPressed = false;
+        }
+
+        
 
         window.clear();
         g.draw(window);
