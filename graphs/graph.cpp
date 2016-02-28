@@ -92,6 +92,7 @@ MapGraph& MapGraph::process(unsigned id) {
     if (v->gen_info.processed) {
         // TODO: Reprocess the vertex here so the connections map change
     } else {
+        v->gen_info.processed = true;
         double prob_edge_exists =
             average_no_edges_per_vertex / max_edges_per_vertex;
         auto bdist = std::binomial_distribution<unsigned>(
