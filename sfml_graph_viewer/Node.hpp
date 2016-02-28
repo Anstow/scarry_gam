@@ -30,6 +30,10 @@ public:
         graphic_.setPosition(p - sf::Vector2f{10.0f, 10.0f});
     }
 
+    void setColor(sf::Color const& c) {
+        graphic_.setOutlineColor(c);
+    }
+
     sf::Vector2f getPos() const {
         return graphic_.getPosition() + sf::Vector2f{10.0f, 10.0f};
     }
@@ -107,11 +111,14 @@ public:
     void loadFromGraph() {
         std::for_each(g_.vertexBegin(), g_.vertexEnd(),
                 [this](graphs::Vertex& v) {
-                    if (std::find_if(nodes_.begin(), nodes_.end(),
-                            [&](Node const& n) {
-                                return n.id == v.id;
-                            }) == nodes_.end()) {
+                    auto existingNode =
+                        std::find_if(nodes_.begin(), nodes_.end(), [&](Node const& n) {
+                                    return n.id == v.id;
+                                });
+                    if (existingNode == nodes_.end()) {
                         nodes_.push_back(Node{v.id, createPos_});
+                    } else if (v.gen_info.processed) {
+                        existingNode->setColor({255,0,0});
                     }
                 });
         edges_.clear();
