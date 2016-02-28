@@ -12,6 +12,6 @@ public:
     virtual void draw(sf::RenderTarget&) const = 0;
 
     Vec const& getPos() const { return pos_; } 
-    Vec& getPos() { return pos_; } 
-    void setPos(Vec const& p) {  pos_ = p; } 
+    virtual void setPos(Vec const& p) {  pos_ = p; } 
+
 };

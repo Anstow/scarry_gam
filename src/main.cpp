@@ -46,7 +46,10 @@ int main()
     for (auto& c : tank::Controllers::getConnectedControllers())
     {
         constexpr unsigned start_node = 0;
-        Player* p = new Player(*c, start_node);
+
+        nodes[start_node].setID(start_node);
+        Player* p = new Player(*c, &nodes[start_node]);
+
         players.emplace_back(
             std::make_pair//<Player*, std::unique_ptr<sf::RenderTexture>>
                 (p,
@@ -63,24 +66,24 @@ int main()
 
         handle_events(window);
 
-        /*
-        for (auto& p : players) {
-            nodes[p.first->getCurrentNode()].update();
-        }
-        */
         for (auto& n : nodes) {
-            n.second.update();
+            std::get<1>(n).update();
         }
 
 
         window.clear();
         for (auto& p : players)
         {
-            auto player = p.first;
-            auto& canvas = p.second;
+            auto player = std::get<0>(p);
+            auto& canvas = std::get<1>(p);
 
-            auto node_id = player->getCurrentNode();
+            auto node_id = player->getCurrentNode()->getID();
 
+            auto v = canvas->getView();
+
+            auto player_pos = player->getPos();
+            v.setCenter(player_pos.x, player_pos.y);
+            canvas->setView(v);
             canvas->clear();
 
             draw_world(graph, node_id, *canvas);
@@ -156,19 +159,23 @@ void draw_world(graphs::MapGraph const& graph, NodeID node_id,
     {
         auto edges = find_edges(graph, node_id);
         draw_node(node_id, canvas, edges.size());
+        /*
         for (NodeID e : edges)
         {
             draw_node(e, canvas, 2);
         }
+        */
     }
     else
     {
         auto e = graph.edgeFromId(node_id);
         draw_node(node_id, canvas, 2);
+        /*
         for (NodeID v : {e->v1, e->v2})
         {
             draw_node(v, canvas, find_edges(graph, v).size());
         }
+        */
     }
 }
 
@@ -177,6 +184,7 @@ void draw_node(NodeID node_id, sf::RenderTarget& canvas, unsigned n_edges)
     //int n_edges = isEdge ? 2 : find_edges(node_id).size();
 
     auto& node = nodes[node_id];
+    nodes[node_id].setID(node_id); // Hehehehehehehehehehehehe
     if (node.edgeCount() != n_edges)
     {
         node.updateEdgeCount(n_edges);

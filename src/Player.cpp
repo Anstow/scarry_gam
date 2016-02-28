@@ -7,12 +7,10 @@ constexpr double Player::accel_;
 constexpr double Player::damping_;
 constexpr double Player::time_;
 
-Player::Player(tank::Controller const& c, Vertex vert_id)
+Player::Player(tank::Controller const& c, Node* node)
     : controller_ {c}
-    , currentNode_ {vert_id}
+    , currentNode_ {node}
 {
-    auto& pos = getPos();
-    sprite_.setPosition(pos.x, pos.y);
 }
 
 void Player::update()
@@ -21,11 +19,11 @@ void Player::update()
 
     tank::Vectorf ls = controller_.leftStick();
     float magnitude = ls.magnitude();
-    tank::Vectorf disp = {0,0};
+    tank::Vectorf force = {0,0};
     if (magnitude > dead_zone) {
-        disp = ls - (dead_zone * (ls / magnitude)) / (1 - dead_zone);
+        force = ls - (dead_zone * (ls / magnitude)) / (1 - dead_zone);
     }
-    moveBy(disp);
+    moveBy(force);
 }
 
 void Player::draw(sf::RenderTarget& target) const
@@ -33,12 +31,20 @@ void Player::draw(sf::RenderTarget& target) const
     target.draw(sprite_);
 }
 
-void Player::moveBy(tank::Vectorf const& disp) {
-
-    auto& pos = getPos();
-    pos += vel_ * time_  + disp * accel_ * time_ * time_ / 2;
+void Player::moveBy(tank::Vectorf const& force)
+{
+    auto pos = getPos();
+    auto disp = vel_ * time_  + force * accel_ * time_ * time_ / 2;
+    disp /= 600;
+    pos += disp;
     vel_ *= damping_;
-    vel_ += disp * accel_ * time_;
+    vel_ += force * accel_ * time_;
 
+    setPos(pos);
+}
+
+void Player::setPos(tank::Vectorf const& pos)
+{
+    Entity::setPos(pos);
     sprite_.setPosition(pos.x, pos.y);
 }

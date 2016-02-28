@@ -4,13 +4,13 @@
 #include <SFML/Graphics/CircleShape.hpp>
 
 #include "Vector.hpp"
+#include "Node.hpp"
 
 class Player : public Entity
 {
-    using Vertex = unsigned;
     tank::Controller const& controller_;
     sf::CircleShape sprite_ {20};
-    Vertex currentNode_;
+    Node* currentNode_;
 
     tank::Vectorf vel_{0,0};
 
@@ -20,12 +20,14 @@ class Player : public Entity
     static constexpr double time_ = 0.25;
 
 public:
-    Player(tank::Controller const& c, Vertex startNode_);
+    Player(tank::Controller const& c, Node* startNode_);
 
     void update() override;
     void draw(sf::RenderTarget&) const override;
 
-    void moveBy(tank::Vectorf const& disp);
-    
-    Vertex const& getCurrentNode() const { return currentNode_; }
+    void moveBy(tank::Vectorf const& force);
+
+    Node* getCurrentNode() { return currentNode_; }
+
+    void setPos(tank::Vectorf const&) override;
 };

@@ -7,14 +7,24 @@
 
 class Node : public Entity
 {
+public:
+    using NodeID = unsigned;
+
+private:
     sf::Texture tx_;
     sf::Sprite sprite_;
     std::vector<std::unique_ptr<Entity>> entities_;
+    sf::Vector2u tileSize_;
+    //const NodeID id_;
+    NodeID id_;
 
     unsigned edgeCount_;
 
 public:
     Node();
+
+    NodeID getID() const { return id_; }
+    void setID(NodeID id) { id_ = id; }
 
     unsigned edgeCount() const { return edgeCount_; }
 

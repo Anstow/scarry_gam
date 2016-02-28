@@ -1,11 +1,13 @@
 #include "Node.hpp"
 
 #include <iostream>
+#include <SFML/Graphics/Transform.hpp>
 
 Node::Node()
 {
     tx_.loadFromFile("res/gfx/vert_00.png");
     sprite_.setTexture(tx_);
+    tileSize_ = tx_.getSize();
     edgeCount_ = 0;
 }
 
@@ -34,9 +36,13 @@ void Node::draw(sf::RenderTarget& target) const
 {
     target.draw(sprite_);
 
-    for (auto const& e : entities_)
+    for (auto& e : entities_)
     {
+        auto old_pos = e->getPos();
+        e->setPos({old_pos.x*tileSize_.x, old_pos.y*tileSize_.y});
         e->draw(target);
+        e->setPos(old_pos);
+        std::cout << old_pos.x*tileSize_.x << "\n";
     }
 }
 
