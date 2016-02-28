@@ -20,6 +20,7 @@ endif()
 
 add_subdirectory(src)
 add_subdirectory(graphs)
+add_subdirectory(input)
 file(COPY "res" DESTINATION ${CMAKE_BINARY_DIR})
 
 add_subdirectory(sfml_graph_viewer)
