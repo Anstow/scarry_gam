@@ -24,6 +24,7 @@ std::vector<sf::Sprite> screens;
 std::vector<std::pair<Player*, std::unique_ptr<sf::RenderTexture>>> players;
 sf::RenderWindow window;
 
+void handle_events(sf::RenderWindow&);
 void handle_tank_controllers(sf::Event const&);
 void create_split_screen();
 void draw_world(graphs::MapGraph const&, NodeID, sf::RenderTarget& target);
@@ -60,32 +61,15 @@ int main()
         const auto frame_start = std::chrono::system_clock::now();
         const auto frame_end = frame_start + frame_duration;
 
-        sf::Event event;
-        while (window.pollEvent(event))
-        {
-            handle_tank_controllers(event);
+        handle_events(window);
 
-            switch(event.type)
-            {
-            case sf::Event::Closed:
-                window.close(); break;
-            case sf::Event::Resized:
-                {
-                auto v = window.getView();
-                v.setSize(event.size.width, event.size.height);
-                v.setCenter(event.size.width / 2, event.size.height / 2);
-                window.setView(v);
-                create_split_screen(); //XXX: This causes muchos lag
-                break;
-                }
-            default:
-                break;
-            }
-        }
-
+        /*
         for (auto& p : players) {
             nodes[p.first->getCurrentNode()].update();
-            p.first->update();
+        }
+        */
+        for (auto& n : nodes) {
+            n.second.update();
         }
 
 
@@ -98,16 +82,8 @@ int main()
             auto node_id = player->getCurrentNode();
 
             canvas->clear();
-        }
-        for (auto& p : players)
-        {
-            auto player = p.first;
-            auto& canvas = p.second;
-
-            auto node_id = player->getCurrentNode();
 
             draw_world(graph, node_id, *canvas);
-            player->draw(*canvas);
 
             canvas->display(); // make it not upside down ???????
         }
@@ -219,4 +195,30 @@ std::vector<NodeID> find_edges(graphs::MapGraph const& g, NodeID id)
         }
     }
     return result;
+}
+
+void handle_events(sf::RenderWindow& window)
+{
+    sf::Event event;
+    while (window.pollEvent(event))
+    {
+        handle_tank_controllers(event);
+
+        switch(event.type)
+        {
+        case sf::Event::Closed:
+            window.close(); break;
+        case sf::Event::Resized:
+            {
+            auto v = window.getView();
+            v.setSize(event.size.width, event.size.height);
+            v.setCenter(event.size.width / 2, event.size.height / 2);
+            window.setView(v);
+            create_split_screen(); //XXX: This causes muchos lag
+            break;
+            }
+        default:
+            break;
+        }
+    }
 }
