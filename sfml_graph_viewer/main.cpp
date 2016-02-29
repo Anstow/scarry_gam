@@ -61,7 +61,10 @@ int main() {
             rightButtonPressed = false;
         }
 
-        
+        // ESC closed the viewer
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Escape)) {
+            window.close();
+        }
 
         window.clear();
         g.draw(window);
