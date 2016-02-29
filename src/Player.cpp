@@ -8,23 +8,16 @@ constexpr double Player::damping_;
 constexpr double Player::time_;
 constexpr float Player::radius_;
 
-Player::Player(tank::Controller const& c, Node* node)
-    : controller_ {c}
+Player::Player(std::unique_ptr<input::InputInterface const>&& input, Node* node)
+    : controller_ {std::move(input)}
     , currentNode_ {node}
 {
 }
 
 void Player::update()
 {
-    constexpr float dead_zone = 0.2; // inverse pad sensitivity [0,1]
-
-    tank::Vectorf ls = controller_.leftStick();
-    float magnitude = ls.magnitude();
-    tank::Vectorf force = {0,0};
-    if (magnitude > dead_zone) {
-        force = ls - (dead_zone * (ls / magnitude)) / (1 - dead_zone);
-    }
-    moveBy(force);
+    // Input
+    moveBy(controller_->getMovementDisp());
 }
 
 void Player::draw(sf::RenderTarget& target) const

@@ -14,6 +14,9 @@
 #include "Player.hpp"
 #include "Node.hpp"
 
+#include "../input/ControllerInput.hpp"
+#include "../input/KeyboardInput.hpp"
+
 using NodeID = unsigned;
 
 constexpr unsigned frames_per_second = 60;
@@ -21,6 +24,8 @@ constexpr std::chrono::duration<double> frame_duration(1.0/frames_per_second);
 
 std::unordered_map<NodeID, Node> nodes;
 std::vector<sf::Sprite> screens;
+// This is horible perhaps Player should be std::unique_ptr
+// TODO(David): don't leek players!
 std::vector<std::pair<Player*, std::unique_ptr<sf::RenderTexture>>> players;
 sf::RenderWindow window;
 
@@ -43,12 +48,28 @@ int main()
 
     tank::Controllers::initialize();
 
+    // Add keyboard player
+    {
+        constexpr unsigned start_node = 0;
+
+        Player* p = new Player(
+                std::make_unique<input::KeyboardInput>(),
+                &nodes[start_node]);
+        players.emplace_back(
+            std::make_pair//<Player*, std::unique_ptr<sf::RenderTexture>>
+                (p,
+                 std::unique_ptr<sf::RenderTexture>(new sf::RenderTexture)));
+        nodes[start_node].addEntity(std::unique_ptr<Player>(p));
+    }
+
     for (auto& c : tank::Controllers::getConnectedControllers())
     {
         constexpr unsigned start_node = 0;
 
         nodes[start_node].setID(start_node);
-        Player* p = new Player(*c, &nodes[start_node]);
+        Player* p = new Player(
+                std::make_unique<input::ControllerInput>(*c),
+                &nodes[start_node]);
 
         players.emplace_back(
             std::make_pair//<Player*, std::unique_ptr<sf::RenderTexture>>

@@ -1,7 +1,9 @@
 #include "Entity.hpp"
 
-#include <Tank/System/Controller.hpp>
 #include <SFML/Graphics/CircleShape.hpp>
+#include <memory>
+
+#include "../input/InputInterface.hpp"
 
 #include "Vector.hpp"
 #include "Node.hpp"
@@ -17,14 +19,14 @@ class Player : public Entity
     static constexpr float restitution_ = 0.7f;
 
     using Vertex = unsigned;
-    tank::Controller const& controller_;
+    std::unique_ptr<input::InputInterface const> controller_;
     sf::CircleShape sprite_ {radius_};
     Node* currentNode_;
 
     tank::Vectorf vel_{0,0};
 
 public:
-    Player(tank::Controller const& c, Node* startNode_);
+    Player(std::unique_ptr<input::InputInterface const>&& input, Node* startNode_);
 
     void update() override;
     void draw(sf::RenderTarget&) const override;
