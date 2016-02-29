@@ -12,10 +12,10 @@ tank::Vectorf KeyboardInput::getMovementDisp() const {
     tank::Vectorf disp{0,0};
 
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Left)) {
-        disp += tank::Vectorf{1,0};
+        disp += tank::Vectorf{-1,0};
     }
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Right)) {
-        disp += tank::Vectorf{-1,0};
+        disp += tank::Vectorf{1,0};
     }
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Up)) {
         disp += tank::Vectorf{0,-1};
