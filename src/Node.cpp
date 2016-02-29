@@ -46,10 +46,6 @@ void Node::draw(sf::RenderTarget& target) const
     }
 }
 
-CollisionMap* Node::getCollisionMap() {
-    return collision_.get();
-}
-
 void Node::updateLayout()
 {
     /* Fix graphics and match holes */

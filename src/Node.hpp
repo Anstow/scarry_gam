@@ -3,9 +3,7 @@
 #include <memory>
 #include <SFML/Graphics/Sprite.hpp>
 #include <SFML/Graphics/Texture.hpp>
-
 #include "Entity.hpp"
-#include "Collision.hpp"
 
 class Node : public Entity
 {
@@ -22,8 +20,6 @@ private:
 
     unsigned edgeCount_;
 
-    std::unique_ptr<CollisionMap> collision_{std::make_unique<CollisionMap>("res/gfx/vert_00.png")};
-
 public:
     Node();
 
@@ -38,8 +34,6 @@ public:
 
     void update() override;
     void draw(sf::RenderTarget&) const override;
-
-    CollisionMap* getCollisionMap();
 
 private:
 

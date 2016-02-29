@@ -7,7 +7,6 @@
 
 #include "Vector.hpp"
 #include "Node.hpp"
-#include "Collision.hpp"
 
 class Player : public Entity
 {
@@ -36,10 +35,4 @@ public:
     Node* getCurrentNode() { return currentNode_; }
 
     void setPos(tank::Vectorf const&) override;
-
-    tank::Vectorf getCentre();
-    void setCentre(tank::Vectorf const& centre);
-
-private:
-    CollisionMap* getCollisionMap();
 };
