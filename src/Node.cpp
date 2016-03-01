@@ -38,11 +38,12 @@ void Node::draw(sf::RenderTarget& target) const
 
     for (auto& e : entities_)
     {
-        auto old_pos = e->getPos();
-        e->setPos({old_pos.x*tileSize_.x, old_pos.y*tileSize_.y});
+        // I don't know what the commented out lines are for?
+        //auto old_pos = e->getPos();
+        //e->setPos({old_pos.x*tileSize_.x, old_pos.y*tileSize_.y});
         e->draw(target);
-        e->setPos(old_pos);
-        std::cout << old_pos.x*tileSize_.x << "\n";
+        //e->setPos(old_pos);
+        //std::cout << old_pos.x*tileSize_.x << "\n";
     }
 }
 

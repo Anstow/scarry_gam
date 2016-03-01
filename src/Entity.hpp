@@ -5,7 +5,7 @@
 
 class Entity
 {
-    Vec pos_ {0.5, 0.5};
+    Vec pos_ {0, 0};
 
 public:
     virtual void update() = 0;

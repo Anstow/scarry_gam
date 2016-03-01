@@ -28,7 +28,6 @@ void Player::moveBy(tank::Vectorf const& force)
 {
     auto pos = getPos();
     auto disp = vel_ * time_  + force * accel_ * time_ * time_ / 2;
-    disp /= 600;
     pos += disp;
     vel_ *= damping_;
     vel_ += force * accel_ * time_;
