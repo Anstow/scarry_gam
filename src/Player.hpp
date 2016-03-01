@@ -25,7 +25,7 @@ class Player : public Entity
     tank::Vectorf vel_{0,0};
 
 public:
-    Player(std::unique_ptr<input::InputInterface const>&& input, Node* startNode_);
+    Player(std::unique_ptr<input::InputInterface const> input, Node* startNode_);
 
     void update() override;
     void draw(sf::RenderTarget&) const override;

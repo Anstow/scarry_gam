@@ -7,7 +7,7 @@ constexpr double Player::accel_;
 constexpr double Player::damping_;
 constexpr double Player::time_;
 
-Player::Player(std::unique_ptr<input::InputInterface const>&& input, Node* node)
+Player::Player(std::unique_ptr<input::InputInterface const> input, Node* node)
     : controller_ {std::move(input)}
     , currentNode_ {node}
 {
