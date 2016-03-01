@@ -12,11 +12,6 @@
 
 namespace drawing {
 
-constexpr float defaultSpringConst = 50.0f;
-constexpr float nodeSep = 2000.0f * defaultSpringConst;
-constexpr float nodeMass = 0.1f;
-constexpr float damping = 0.7;
-
 constexpr float stepTime = 0.01f;
 
 class Node {
@@ -57,7 +52,6 @@ class Graph {
     sf::Vector2f offset_ = {0,0};
 
     sf::Vector2f createPos_;
-
 
 public:
     Graph(sf::Vector2f const& createPos);

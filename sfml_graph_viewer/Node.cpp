@@ -2,6 +2,12 @@
 
 using namespace drawing;
 
+constexpr float defaultSpringConst = 50.0f;
+constexpr float defaultSpringLength = 50.0f;
+constexpr float nodeSep = 500.0f;
+constexpr float nodeMass = 0.1f;
+constexpr float damping = 0.7;
+
 constexpr float vectorLength(sf::Vector2f const& v) {
     return std::sqrt(v.x * v.x + v.y * v.y);
 }
@@ -129,13 +135,13 @@ void Graph::loadFromGraph() {
     selected_ = nodes_.end();
 }
 
-float calcSpringForceMag(float len, float springConst) {
-    return springConst * len;
+float calcSpringForceMag(float len, float springConst, float springLength) {
+    return springConst * (len - springLength);
 }
 
 float calcGenForce(float len) {
     (void) len;
-    return - nodeSep / len;
+    return - nodeSep;
 }
 
 /*!
@@ -147,7 +153,7 @@ sf::Vector2f calcEdgeForce(Node& v1, Node const& v2) {
         v1.setPos(v1.getPos() + sf::Vector2f{getRandom(),getRandom()});
     sf::Vector2f offset = v2.getPos() - v1.getPos();
     float l = vectorLength(offset);
-    return calcSpringForceMag(l, defaultSpringConst) * offset / l;
+    return calcSpringForceMag(l, defaultSpringConst, defaultSpringLength) * offset / l;
 }
 
 /*!
