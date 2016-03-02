@@ -28,3 +28,12 @@ Overlap when colliding
 At present the is a slight overlap when colliding with the pixels above and to
 the left. This is because we are colliding with the top right corner of the
 pixel.
+
+
+Line Collision
+--------------
+
+At present the collision code only works with points. So walls are just lots of
+points next to one another. Perhaps implementing colliding with lines would fix
+some of the problems mentioned above and reduce the amount of work that the
+collision detection system has to do.
