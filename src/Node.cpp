@@ -16,12 +16,10 @@ Node::Node()
     edgeCount_ = 0;
     serial::NodeMeta nodeData;
     {
-        std::fstream input("../res/nodes/node1.tbuf", std::ios::in);
+        std::fstream input("res/nodes/node1.tbuf", std::ios::in);
         google::protobuf::io::IstreamInputStream stream(&input);
-        if (google::protobuf::TextFormat::Parse(&stream, &nodeData)) {
-            // TODO: handle this a little more elegantly
-            throw "Problem parsing file.";
-        }
+        // TODO: handle errors in parsing of file.
+        google::protobuf::TextFormat::Parse(&stream, &nodeData);
     }
     collision_ = std::make_unique<CollisionMap>(nodeData.boundaries());
 }
