@@ -87,6 +87,12 @@ int main()
 
         handle_events(window);
 
+        // For testing purposes its a lot easy for me to press escape than to
+        // close the window manually
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Escape)) {
+            window.close();
+        }
+
         for (auto& n : nodes) {
             std::get<1>(n).update();
         }
