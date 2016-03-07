@@ -16,7 +16,8 @@ class Player : public Entity
     static constexpr double damping_ = 0.75;
     static constexpr double time_ = 0.25;
     static constexpr float radius_ = 20.0;
-    static constexpr float restitution_ = 0.7f;
+    // A positive value for restitution_ is needed to stop things getting stuck
+    static constexpr float restitution_ = 0.01f;
 
     using Vertex = unsigned;
     std::unique_ptr<input::InputInterface const> controller_;

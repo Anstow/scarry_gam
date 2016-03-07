@@ -1,13 +1,15 @@
 #ifndef COLLISION_HPP
 #define COLLISION_HPP
 
+#include "../serial/node.pb.h"
+
 #include <vector>
 #include <tuple>
 #include <Tank/Utility/Vector.hpp>
 #include <algorithm>
 
 struct CollisionData {
-    tank::Vectorf point;
+    tank::Vectorf normal;
 
     float time;
 };
@@ -23,21 +25,13 @@ class CollisionMap {
     /*!
      * \brief The points to test for a collision against.
      */
-    std::vector<tank::Vectorf> testPoints_;
+    std::vector<std::vector<tank::Vectorf>> collisionLines_;
 
 public:
     unsigned width;
     unsigned height;
 
-    CollisionMap(std::string fileName);
-
-    /*!
-     * \brief This loads the collision data and sets the background image
-     * correspondingly.
-     *
-     * \param fileName The name of the file with the bitmap data in.
-     */
-    void load(std::string fileName);
+    CollisionMap(serial::Boundary const& boundary);
 
     /*!
      * \brief This get the collision data for the ball.

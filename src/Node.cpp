@@ -1,7 +1,12 @@
 #include "Node.hpp"
 
+#include "../serial/node.pb.h"
+
 #include <iostream>
+#include <fstream>
 #include <SFML/Graphics/Transform.hpp>
+#include <google/protobuf/text_format.h>
+#include <google/protobuf/io/zero_copy_stream_impl.h>
 
 Node::Node()
 {
@@ -9,6 +14,16 @@ Node::Node()
     sprite_.setTexture(tx_);
     tileSize_ = tx_.getSize();
     edgeCount_ = 0;
+    serial::NodeMeta nodeData;
+    {
+        std::fstream input("../res/nodes/node1.tbuf", std::ios::in);
+        google::protobuf::io::IstreamInputStream stream(&input);
+        if (google::protobuf::TextFormat::Parse(&stream, &nodeData)) {
+            // TODO: handle this a little more elegantly
+            throw "Problem parsing file.";
+        }
+    }
+    collision_ = std::make_unique<CollisionMap>(nodeData.boundaries());
 }
 
 void Node::addEntity(std::unique_ptr<Entity>&& e) {

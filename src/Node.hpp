@@ -22,7 +22,7 @@ private:
 
     unsigned edgeCount_;
 
-    std::unique_ptr<CollisionMap> collision_{std::make_unique<CollisionMap>("res/gfx/vert_00.png")};
+    std::unique_ptr<CollisionMap> collision_;
 
 public:
     Node();
