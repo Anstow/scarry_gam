@@ -1,0 +1,26 @@
+package serial;
+
+message Point {
+  required float x = 1;
+  required float y = 2;
+}
+
+message LineList {
+  repeated Point points = 1;
+}
+
+message Boundary {
+  repeated LineList line_list = 1;
+}
+
+message ExitLine {
+  required Point e1 = 1;
+  required Point e2 = 2;
+  optional uint32 exit_id = 3;
+}
+
+message NodeMeta {
+  optional Boundary boundaries = 1;
+  repeated ExitLine exit_lines = 2;
+  optional string image_loc = 3;
+}

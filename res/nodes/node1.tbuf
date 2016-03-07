@@ -1,0 +1,131 @@
+boundaries {
+  line_list {
+    points {
+      x: 0
+      y: 270
+    }
+    points {
+      x: 100
+      y: 270
+    }
+    points {
+      x: 100
+      y: 100
+    }
+    points {
+      x: 270
+      y: 100
+    }
+    points {
+      x: 270
+      y: 0
+    }
+  }
+  line_list {
+    points {
+      x: 270
+      y: 640
+    }
+    points {
+      x: 270
+      y: 540
+    }
+    points {
+      x: 100
+      y: 540
+    }
+    points {
+      x: 100
+      y: 370
+    }
+    points {
+      x: 0
+      y: 370
+    }
+  }
+  line_list {
+    points {
+      x: 640
+      y: 370
+    }
+    points {
+      x: 540
+      y: 370
+    }
+    points {
+      x: 540
+      y: 540
+    }
+    points {
+      x: 370
+      y: 540
+    }
+    points {
+      x: 370
+      y: 640
+    }
+  }
+  line_list {
+    points {
+      x: 370
+      y: 0
+    }
+    points {
+      x: 370
+      y: 100
+    }
+    points {
+      x: 540
+      y: 100
+    }
+    points {
+      x: 540
+      y: 270
+    }
+    points {
+      x: 640
+      y: 270
+    }
+  }
+}
+//exit_lines {
+//  e1 {
+//    x: 270
+//    y: 0
+//  }
+//  e2 {
+//    x: 370
+//    y: 0
+//  }
+//}
+//exit_lines {
+//  e1 {
+//    x: 640
+//    y: 270
+//  }
+//  e2 {
+//    x: 640
+//    y: 370
+//  }
+//}
+//exit_lines {
+//  e1 {
+//    x: 370
+//    y: 640
+//  }
+//  e2 {
+//    x: 270
+//    y: 640
+//  }
+//}
+//exit_lines {
+//  e1 {
+//    x: 0
+//    y: 370
+//  }
+//  e2 {
+//    x: 0
+//    y: 270
+//  }
+//}
+image_loc: "res/gfx/vert_00.png"
