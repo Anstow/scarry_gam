@@ -1,22 +1,24 @@
 #include "Collision.hpp"
 
+#include "../sfml_extensions/VectorExtensions.hpp"
+
 #include <SFML/Graphics.hpp>
 
 #include <iostream>
 
 struct Circle {
-    tank::Vectorf centre;
+    sf::Vector2f centre;
     float radius;
 };
 
 struct LineSegment {
-    tank::Vectorf e1;
-    tank::Vectorf e2;
+    sf::Vector2f e1;
+    sf::Vector2f e2;
 };
 
 struct PointMovement {
-    tank::Vectorf pos;
-    tank::Vectorf vel;
+    sf::Vector2f pos;
+    sf::Vector2f vel;
 };
 
 CollisionMap::CollisionMap(serial::Boundary const& boundaries) {
@@ -26,7 +28,7 @@ CollisionMap::CollisionMap(serial::Boundary const& boundaries) {
     for (int i = 0; i < bs; ++i) {
         lineList = boundaries.line_list(i);
         auto ls = lineList.points_size();
-        collisionLines_.push_back(std::vector<tank::Vectorf>());
+        collisionLines_.push_back(std::vector<sf::Vector2f>());
         auto& cl = collisionLines_.back();
         for (int j = 0; j < ls; ++j) {
             pt = lineList.points(j);
@@ -51,7 +53,7 @@ CollisionMap::CollisionMap(std::string file)
                  (x != size.x - 1 and t.getPixel(x+1,y) != collideColor) or
                  (y != 0 and t.getPixel(x,y-1) != collideColor) or
                  (y != size.y - 1 and t.getPixel(x,y+1) != collideColor))) {
-                testPoints_.push_back(tank::Vectorf{x,y});
+                testPoints_.push_back(sf::Vector2f{x,y});
             }
         }
     }
@@ -83,9 +85,9 @@ CollisionData collideWithCircle(
      * If there is only one positive solution we may ingore it as this
      * corresponds to the case when the point is inside the ball.
      */
-    float A = p.vel.magnitudeSquared();
-    float B = 2 * (p.vel.dot(p.pos - c.centre));
-    float C = (p.pos - c.centre).magnitudeSquared() - c.radius * c.radius;
+    float A = magnitudeSquared(p.vel);
+    float B = 2 * (dot(p.vel, p.pos - c.centre));
+    float C = magnitudeSquared(p.pos - c.centre) - c.radius * c.radius;
     
     /* If velocity is 0 don't collide with this algorithm
      * If there is at most one positive solution we don't collide.
@@ -97,7 +99,7 @@ CollisionData collideWithCircle(
         return {{0,0}, time};
     }
     float t = (-B - std::sqrt(B * B - 4 * A * C)) / (2 * A);
-    return { (c.centre - (p.pos + p.vel * t)).unit(), std::min(time, t) };
+    return { unit(c.centre - (p.pos + p.vel * t)), std::min(time, t) };
 }
 
 CollisionData collideWithOffsetLine(
@@ -142,10 +144,10 @@ CollisionData collideWithOffsetLine(
      * i.e. if
      * t det <= 0
      */
-    tank::Vectorf normal{ (l.e2 - l.e1).y, -(l.e2 - l.e1).x };
-    tank::Vectorf unit_normal = normal.unit();
-    tank::Vectorf diff = l.e1 - p.pos + unit_normal * offset;
-    float det = normal.dot(p.vel);
+    sf::Vector2f normal{ (l.e2 - l.e1).y, -(l.e2 - l.e1).x };
+    sf::Vector2f unit_normal = unit(normal);
+    sf::Vector2f diff = l.e1 - p.pos + unit_normal * offset;
+    float det = dot(normal, p.vel);
     // Check we are moving towards the line
     if (det >= 0)
         return { {0,0}, time };
@@ -153,7 +155,7 @@ CollisionData collideWithOffsetLine(
     // We missed the line segment
     if (sdet > 0 or sdet < det)
         return { {0,0}, time };
-    float tdet = normal.dot(diff);
+    float tdet = dot(normal, diff);
     if (tdet > 0)
         return { {0,0}, time };
     return { unit_normal, tdet / det };
@@ -161,7 +163,7 @@ CollisionData collideWithOffsetLine(
 
 CollisionData collideWithLineList(
         PointMovement const& p,
-        std::vector<tank::Vectorf> const& ll,
+        std::vector<sf::Vector2f> const& ll,
         float const radius,
         float const time) {
     auto minCollisionPoint = 
@@ -178,13 +180,13 @@ CollisionData collideWithLineList(
     }
     // Abuse of accumulate to iterate through the points.
     cd = std::accumulate(ll.begin(), ll.end(), cd,
-            [=](CollisionData const& c1, tank::Vectorf const& point) {
+            [=](CollisionData const& c1, sf::Vector2f const& point) {
                 return minCollisionPoint(c1, collideWithCircle(p, {point, radius}, time));
             });
     // Abuse of inner product to iterate over pairs of points!
     cd = std::inner_product(ll.begin() + 1, ll.end(), ll.begin(), cd,
             minCollisionPoint,
-            [=](tank::Vectorf const& e1, tank::Vectorf const& e2) {
+            [=](sf::Vector2f const& e1, sf::Vector2f const& e2) {
                 if (e1 == e2) {
                     return CollisionData{{0,0}, time};
                 } else {
@@ -199,7 +201,7 @@ CollisionData CollisionMap::getBallCollision(
         float time) {
     CollisionData ret = {{0,0}, time};
     std::for_each(collisionLines_.begin(), collisionLines_.end(), 
-            [&](std::vector<tank::Vectorf> const& cl) {
+            [&](std::vector<sf::Vector2f> const& cl) {
                 auto cd = collideWithLineList({b.centre, b.vel}, cl, b.radius, time);
                 if (time > cd.time) {
                     ret = cd;

@@ -3,29 +3,30 @@
 
 #include "../serial/node.pb.h"
 
+#include <SFML/System/Vector2.hpp>
+
 #include <vector>
 #include <tuple>
-#include <Tank/Utility/Vector.hpp>
 #include <algorithm>
 
 struct CollisionData {
-    tank::Vectorf normal;
+    sf::Vector2f normal;
 
     float time;
 };
 
 struct Ball {
-    tank::Vectorf centre;
+    sf::Vector2f centre;
     float radius;
 
-    tank::Vectorf vel;
+    sf::Vector2f vel;
 };
 
 class CollisionMap {
     /*!
      * \brief The points to test for a collision against.
      */
-    std::vector<std::vector<tank::Vectorf>> collisionLines_;
+    std::vector<std::vector<sf::Vector2f>> collisionLines_;
 
 public:
     unsigned width;

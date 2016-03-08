@@ -8,25 +8,25 @@ using namespace input;
 KeyboardInput::KeyboardInput()
 {}
 
-tank::Vectorf KeyboardInput::getMovementDisp() const {
-    tank::Vectorf disp{0,0};
+sf::Vector2f KeyboardInput::getMovementDisp() const {
+    sf::Vector2f disp{0,0};
 
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Left)) {
-        disp += tank::Vectorf{-1,0};
+        disp += sf::Vector2f{-1,0};
     }
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Right)) {
-        disp += tank::Vectorf{1,0};
+        disp += sf::Vector2f{1,0};
     }
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Up)) {
-        disp += tank::Vectorf{0,-1};
+        disp += sf::Vector2f{0,-1};
     }
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Down)) {
-        disp += tank::Vectorf{0,1};
+        disp += sf::Vector2f{0,1};
     }
 
     // normalise
     if (disp.x != 0 and disp.y != 0) {
-        disp /= std::sqrt(2); // We know we must be travelling diagonally!
+        disp = disp / std::sqrt(2.0f); // We know we must be travelling diagonally!
     }
 
     return disp;

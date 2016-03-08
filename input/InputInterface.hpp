@@ -1,13 +1,13 @@
 #ifndef INPUT_INTERFACE_HPP
 #define INPUT_INTERFACE_HPP
 
-#include <Tank/Utility/Vector.hpp>
+#include <SFML/System/Vector2.hpp>
 
 namespace input {
 
 class InputInterface {
 public:
-    virtual tank::Vectorf getMovementDisp() const = 0;
+    virtual sf::Vector2f getMovementDisp() const = 0;
 };
 
 }

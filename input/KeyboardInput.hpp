@@ -9,7 +9,7 @@ class KeyboardInput : public InputInterface {
 public:
     KeyboardInput();
 
-    virtual tank::Vectorf getMovementDisp() const override final;
+    virtual sf::Vector2f getMovementDisp() const override final;
 };
 
 }

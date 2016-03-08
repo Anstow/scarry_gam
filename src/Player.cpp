@@ -1,11 +1,13 @@
 #include "Player.hpp"
 
+#include "../sfml_extensions/VectorExtensions.hpp"
+
 #include <iostream>
 
-constexpr double Player::minSpeed_;
-constexpr double Player::accel_;
-constexpr double Player::damping_;
-constexpr double Player::time_;
+constexpr float Player::minSpeed_;
+constexpr float Player::accel_;
+constexpr float Player::damping_;
+constexpr float Player::time_;
 constexpr float Player::radius_;
 
 Player::Player(std::unique_ptr<input::InputInterface const> input, Node* node)
@@ -25,15 +27,15 @@ void Player::draw(sf::RenderTarget& target) const
     target.draw(sprite_);
 }
 
-void Player::setPos(tank::Vectorf const& pos)
+void Player::setPos(sf::Vector2f const& pos)
 {
     Entity::setPos(pos);
     sprite_.setPosition(pos.x, pos.y);
 }
 
-void Player::moveBy(tank::Vectorf const& force) {
+void Player::moveBy(sf::Vector2f const& force) {
     // The position of the centre of the ball
-    tank::Vectorf pos = getCentre();
+    sf::Vector2f pos = getCentre();
 
     float timeInterval = time_;
     vel_ = vel_ * damping_ + force * accel_ * timeInterval;
@@ -49,7 +51,7 @@ void Player::moveBy(tank::Vectorf const& force) {
         // If there has been a collision, prepare for the next loop
         if (timeInterval > 0) {
             // The unit vector away form the point collided with
-            float velParallelToNormal = collideData.normal.dot(vel_);
+            float velParallelToNormal = dot(collideData.normal, vel_);
             /* Why does resititution + 1 work?
              * 1:            to cancel out all the motion towards the point
              *               collided with.
@@ -62,12 +64,12 @@ void Player::moveBy(tank::Vectorf const& force) {
 }
 
 
-tank::Vectorf Player::getCentre() {
-    return getPos() + tank::Vectorf{radius_, radius_};
+sf::Vector2f Player::getCentre() {
+    return getPos() + sf::Vector2f{radius_, radius_};
 }
 
-void Player::setCentre(tank::Vectorf const& centre) {
-    setPos(centre - tank::Vectorf{radius_, radius_});
+void Player::setCentre(sf::Vector2f const& centre) {
+    setPos(centre - sf::Vector2f{radius_, radius_});
 }
 
 CollisionMap* Player::getCollisionMap() {

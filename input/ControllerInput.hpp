@@ -16,7 +16,7 @@ class ControllerInput : public InputInterface {
 public:    
     ControllerInput(tank::Controller const& controller);
 
-    virtual tank::Vectorf getMovementDisp() const override final;
+    virtual sf::Vector2f getMovementDisp() const override final;
 };
 
 }

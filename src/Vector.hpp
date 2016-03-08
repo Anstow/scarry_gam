@@ -1,5 +1,5 @@
 #pragma once
 
-#include <Tank/Utility/Vector.hpp>
+#include <SFML/System/Vector2.hpp>
 
-using Vec = tank::Vectorf;
+using Vec = sf::Vector2f;

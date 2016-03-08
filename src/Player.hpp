@@ -11,11 +11,11 @@
 
 class Player : public Entity
 {
-    static constexpr double minSpeed_ = 0.001;
-    static constexpr double accel_ = 8.0;
-    static constexpr double damping_ = 0.75;
-    static constexpr double time_ = 0.25;
-    static constexpr float radius_ = 20.0;
+    static constexpr float minSpeed_ = 0.001f;
+    static constexpr float accel_ = 8.0f;
+    static constexpr float damping_ = 0.75f;
+    static constexpr float time_ = 0.25f;
+    static constexpr float radius_ = 20.0f;
     // A positive value for restitution_ is needed to stop things getting stuck
     static constexpr float restitution_ = 0.01f;
 
@@ -24,7 +24,7 @@ class Player : public Entity
     sf::CircleShape sprite_ {radius_};
     Node* currentNode_;
 
-    tank::Vectorf vel_{0,0};
+    sf::Vector2f vel_{0,0};
 
 public:
     Player(std::unique_ptr<input::InputInterface const> input, Node* startNode_);
@@ -32,14 +32,14 @@ public:
     void update() override;
     void draw(sf::RenderTarget&) const override;
 
-    void moveBy(tank::Vectorf const& force);
+    void moveBy(sf::Vector2f const& force);
 
     Node* getCurrentNode() { return currentNode_; }
 
-    void setPos(tank::Vectorf const&) override;
+    void setPos(sf::Vector2f const&) override;
 
-    tank::Vectorf getCentre();
-    void setCentre(tank::Vectorf const& centre);
+    sf::Vector2f getCentre();
+    void setCentre(sf::Vector2f const& centre);
 
 private:
     CollisionMap* getCollisionMap();
